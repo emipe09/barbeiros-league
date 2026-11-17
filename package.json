@@ -1,0 +1,18 @@
+{
+  "name": "barbeiros-league",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Site e painel do campeonato de F1 virtual Barbeiros League (Node + SQLite nativo).",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/server.js",
+    "build": "node --disable-warning=ExperimentalWarning scripts/build.js",
+    "preview": "npm run build && node scripts/preview.js",
+    "publicar": "node --disable-warning=ExperimentalWarning scripts/publicar.js",
+    "backup": "node --disable-warning=ExperimentalWarning -e \"console.log('Backup salvo em', require('./src/maintenance').backup('manual'))\"",
+    "importar-planilha": "node --disable-warning=ExperimentalWarning scripts/import-xlsx.js",
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js"
+  },
+  "engines": { "node": ">=22.13.0" },
+  "optionalDependencies": { "xlsx": "^0.18.5" }
+}

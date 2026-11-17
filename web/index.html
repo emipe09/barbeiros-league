@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Barbeiros League</title>
+<meta name="description" content="Classificação, resultados e histórico da Barbeiros League, campeonato de F1 virtual." />
+<meta name="theme-color" content="#c8102e" />
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+<link rel="manifest" href="assets/site.webmanifest" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Saira:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/app.css" />
+<script src="config.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+<header class="top">
+  <div class="pole-stripe" aria-hidden="true"></div>
+  <div class="top-inner">
+    <a class="brand" href="#/">
+      <img class="brand-mark" src="assets/icon.svg" alt="" width="30" height="30" />
+      <span id="brand-name">Barbeiros League</span>
+    </a>
+    <label class="season-pick">
+      <span class="sr">Temporada</span>
+      <select id="season" hidden></select>
+    </label>
+  </div>
+  <nav class="nav" aria-label="Seções">
+    <a href="#/" data-nav="home">Classificação</a>
+    <a href="#/corridas" data-nav="races">Corridas</a>
+    <a href="#/hall" data-nav="hall">Hall da fama</a>
+    <a href="#/admin" data-nav="admin" id="nav-admin" hidden>Admin</a>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="loading" aria-live="polite">Carregando a liga…</div>
+</main>
+
+<footer class="foot">
+  <p id="updated"></p>
+  <p>Barbeiros League: F1 virtual entre amigos.</p>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
