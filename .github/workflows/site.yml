@@ -12,9 +12,11 @@ permissions:
   pages: write
   id-token: write
 
+# Nunca cancelar uma publicação em andamento: no GitHub Pages isso pode
+# deixar a publicação travada. Novas execuções esperam a anterior terminar.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -42,3 +44,5 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 300000
