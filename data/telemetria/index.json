@@ -1,0 +1,42 @@
+{
+ "e8767956-9b32-400e-913d-708bdd84b047": {
+  "quali": {
+   "sessionUid": "6238824032225825769",
+   "importedAt": "2026-11-23T12:49:32.883Z",
+   "startedAt": "2026-11-22T18:36:29.831",
+   "track": "Suzuka",
+   "cars": 9,
+   "laps": 1,
+   "weather": "Clear"
+  },
+  "race": {
+   "sessionUid": "12275423404774817431",
+   "importedAt": "2026-11-23T12:49:39.920Z",
+   "startedAt": "2026-11-22T18:57:37.315",
+   "track": "Suzuka",
+   "cars": 9,
+   "laps": 19,
+   "weather": "Overcast"
+  }
+ },
+ "382f63fa-8bbc-4f9b-bd2f-c4ffc32e092d": {
+  "quali": {
+   "sessionUid": "8677427258781006344",
+   "importedAt": "2026-11-23T12:49:43.866Z",
+   "startedAt": "2026-11-22T19:33:48.926",
+   "track": "Spa",
+   "cars": 9,
+   "laps": 1,
+   "weather": "Clear"
+  },
+  "race": {
+   "sessionUid": "13522324240950898447",
+   "importedAt": "2026-11-23T12:49:50.053Z",
+   "startedAt": "2026-11-22T19:55:05.867",
+   "track": "Spa",
+   "cars": 9,
+   "laps": 15,
+   "weather": "Light Cloud"
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+  "_ajuda": "Liga o carro no jogo ao piloto da liga. Chave = \"Equipe do jogo|número do carro\"; valor = nome do piloto exatamente como está no site. Linhas que começam com _ são ignoradas.",
+
+  "Mclaren|54": "Lucas Amaral",
+  "Mclaren|32": "Luiz Henrique",
+  "Ferrari|47": "Marcos Paulo",
+  "Ferrari|95": "Couto",
+  "Mercedes|2": "Matheus Martins",
+  "Mercedes|37": "Pedro",
+  "Aston Martin|2": "João Paulo",
+  "Red Bull Racing|67": "Brehno",
+  "Red Bull Racing|2": "Renato"
+}
