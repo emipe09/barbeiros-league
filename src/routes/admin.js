@@ -256,6 +256,45 @@ function clearResults({ params }) {
   return { ok: true };
 }
 
+/* ---------------- classificação (quali) ---------------- */
+/** Salva a classificação de uma corrida. Mantém a origem "telemetria" das linhas que não mudaram. */
+function saveQuali({ body, params }) {
+  mustChamp(params.id);
+  const race = q.race(params.raceId) || notFound('Corrida');
+  const map = body.entries && typeof body.entries === 'object' ? body.entries : {};
+  const entries = q.entries(params.id);
+
+  const used = new Set();
+  for (const o of Object.values(map)) {
+    if (o == null || o.position == null || o.position === '') continue;
+    const p = Number(o.position);
+    if (!Number.isInteger(p) || p < 1 || p > 99) bad('Posição inválida na classificação.');
+    if (used.has(p)) bad(`A posição P${p} foi usada duas vezes.`);
+    used.add(p);
+  }
+  const old = new Map(db.prepare('SELECT * FROM qualifying WHERE race_id = ?').all(race.id).map(r => [r.driver_id, r]));
+  withTransaction(() => {
+    db.prepare('DELETE FROM qualifying WHERE race_id = ?').run(race.id);
+    const ins = db.prepare(`INSERT INTO qualifying (id, championship_id, race_id, driver_id, team_id, position, best_lap_ms, source)
+      VALUES (?,?,?,?,?,?,?,?)`);
+    for (const [driverId, o] of Object.entries(map)) {
+      if (o == null || o.position == null || o.position === '') continue;
+      if (!db.prepare('SELECT 1 FROM drivers WHERE id = ?').get(driverId)) continue;
+      const pos = Number(o.position);
+      const ms = o.bestLapMs != null && o.bestLapMs !== '' && Number(o.bestLapMs) > 0 ? Math.round(Number(o.bestLapMs)) : null;
+      const prev = old.get(driverId);
+      const same = prev && prev.position === pos && (prev.best_lap_ms || null) === ms;
+      ins.run(uuid(), params.id, race.id, driverId, teamAtRound(entries, driverId, race.round),
+        pos, ms, same ? prev.source : 'manual');
+    }
+  });
+  return { ok: true };
+}
+function clearQuali({ params }) {
+  db.prepare('DELETE FROM qualifying WHERE championship_id = ? AND race_id = ?').run(params.id, params.raceId);
+  return { ok: true };
+}
+
 /* ---------------- inscrições / transferências ---------------- */
 function transfer({ body, params }) {
   mustChamp(params.id);
@@ -301,6 +340,7 @@ function exportData() {
     version: 2, exportedAt: now(),
     meta: all('meta'), teams: all('teams'), drivers: all('drivers'), championships: all('championships'),
     races: all('races'), driver_entries: all('driver_entries'), results: all('results'),
+    qualifying: all('qualifying'),
   };
 }
 function importData({ body }) {
@@ -309,7 +349,7 @@ function importData({ body }) {
   const arr = (v) => Array.isArray(v) ? v : [];
   backup('antes-restaurar');
   withTransaction(() => {
-    db.exec('DELETE FROM results; DELETE FROM driver_entries; DELETE FROM races; DELETE FROM championships; DELETE FROM drivers; DELETE FROM teams; DELETE FROM meta;');
+    db.exec('DELETE FROM qualifying; DELETE FROM results; DELETE FROM driver_entries; DELETE FROM races; DELETE FROM championships; DELETE FROM drivers; DELETE FROM teams; DELETE FROM meta;');
     const ins = (sql, rows, fn) => { const st = db.prepare(sql); rows.forEach(r => st.run(...fn(r))); };
     ins('INSERT INTO teams (id, name, color, active, created_at) VALUES (?,?,?,?,?)', arr(d.teams), r => [r.id, r.name, r.color, r.active, r.created_at || now()]);
     ins('INSERT INTO drivers (id, name, default_team_id, active, created_at) VALUES (?,?,?,?,?)', arr(d.drivers), r => [r.id, r.name, r.default_team_id, r.active, r.created_at || now()]);
@@ -319,6 +359,8 @@ function importData({ body }) {
     ins('INSERT INTO driver_entries (id, championship_id, driver_id, team_id, from_round, is_reserve) VALUES (?,?,?,?,?,?)', arr(d.driver_entries), r => [r.id, r.championship_id, r.driver_id, r.team_id, r.from_round, r.is_reserve ? 1 : 0]);
     ins(`INSERT INTO results (id, championship_id, race_id, driver_id, team_id, position, status, sprint_position, fastest_lap, pole)
       VALUES (?,?,?,?,?,?,?,?,?,?)`, arr(d.results), r => [r.id, r.championship_id, r.race_id, r.driver_id, r.team_id, r.position, r.status, r.sprint_position, r.fastest_lap, r.pole]);
+    ins(`INSERT INTO qualifying (id, championship_id, race_id, driver_id, team_id, position, best_lap_ms, source)
+      VALUES (?,?,?,?,?,?,?,?)`, arr(d.qualifying), r => [r.id, r.championship_id, r.race_id, r.driver_id, r.team_id, r.position, r.best_lap_ms, r.source || 'manual']);
     ins('INSERT INTO meta (key, value) VALUES (?,?)', arr(d.meta), r => [r.key, r.value]);
   });
   return { ok: true };
@@ -358,6 +400,9 @@ const ROUTES = [
 
   ['PUT', /^\/api\/admin\/championships\/(?<id>[^/]+)\/results\/(?<raceId>[^/]+)$/, saveResults],
   ['DELETE', /^\/api\/admin\/championships\/(?<id>[^/]+)\/results\/(?<raceId>[^/]+)$/, clearResults],
+
+  ['PUT', /^\/api\/admin\/championships\/(?<id>[^/]+)\/qualifying\/(?<raceId>[^/]+)$/, saveQuali],
+  ['DELETE', /^\/api\/admin\/championships\/(?<id>[^/]+)\/qualifying\/(?<raceId>[^/]+)$/, clearQuali],
 
   ['POST', /^\/api\/admin\/championships\/(?<id>[^/]+)\/transfer$/, transfer],
   ['DELETE', /^\/api\/admin\/championships\/(?<id>[^/]+)\/entries\/(?<entryId>[^/]+)$/, removeEntry],

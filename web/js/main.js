@@ -6,6 +6,7 @@ import { renderStandings } from './views/standings.js';
 import { renderRaces, renderRace } from './views/races.js';
 import { renderDriver } from './views/driver.js';
 import { renderHistory } from './views/history.js';
+import { renderTelemetryIndex, renderTelemetry } from './views/telemetry.js';
 
 const main = $('#main');
 
@@ -13,6 +14,8 @@ const ROUTES = [
   [/^\/?$/, () => renderStandings(main), 'home'],
   [/^\/corridas$/, () => renderRaces(main), 'races'],
   [/^\/corrida\/([^/]+)$/, (id) => { syncChampFromRace(id); renderRace(main, id); }, 'races'],
+  [/^\/telemetria$/, () => renderTelemetryIndex(main), 'telemetry'],
+  [/^\/telemetria\/([^/]+)(?:\/([^/]+))?$/, (id, kind) => { syncChampFromRace(id); renderTelemetry(main, id, kind); }, 'telemetry'],
   [/^\/piloto\/([^/]+)$/, (id) => renderDriver(main, id), ''],
   [/^\/hall$/, () => renderHistory(main), 'hall'],
   [/^\/temporada\/([^/]+)$/, (id) => { setChamp(id); location.replace('#/'); }, 'home'],
@@ -39,7 +42,7 @@ function route() {
       $$('.nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.nav === nav));
       document.body.dataset.page = nav || 'page';
       fn(...m.slice(1));
-      if (!path.startsWith('/admin/resultados')) window.scrollTo({ top: 0 });
+      if (!path.startsWith('/admin/resultados') && !path.startsWith('/admin/classificacao')) window.scrollTo({ top: 0 });
       return;
     }
   }

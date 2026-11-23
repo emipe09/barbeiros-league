@@ -115,7 +115,23 @@ CREATE TABLE IF NOT EXISTS results (
   UNIQUE(championship_id, race_id, driver_id)
 );
 
+CREATE TABLE IF NOT EXISTS qualifying (
+  id TEXT PRIMARY KEY,
+  championship_id TEXT NOT NULL,
+  race_id TEXT NOT NULL,
+  driver_id TEXT NOT NULL,
+  team_id TEXT,
+  position INTEGER NOT NULL,
+  best_lap_ms INTEGER,
+  source TEXT NOT NULL DEFAULT 'manual',   -- manual | telemetria
+  FOREIGN KEY(championship_id) REFERENCES championships(id) ON DELETE CASCADE,
+  FOREIGN KEY(race_id) REFERENCES races(id) ON DELETE CASCADE,
+  FOREIGN KEY(driver_id) REFERENCES drivers(id) ON DELETE CASCADE,
+  UNIQUE(race_id, driver_id)
+);
+
 CREATE INDEX IF NOT EXISTS idx_races_champ ON races(championship_id, round);
+CREATE INDEX IF NOT EXISTS idx_quali_champ ON qualifying(championship_id, race_id);
 CREATE INDEX IF NOT EXISTS idx_entries_champ ON driver_entries(championship_id, driver_id);
 CREATE INDEX IF NOT EXISTS idx_results_champ ON results(championship_id, race_id);
 `);

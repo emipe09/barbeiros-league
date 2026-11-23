@@ -1,0 +1,550 @@
+{
+ "fonte": "data/planilhas/F1LM.v1.40.2.xlsx, aba \"Final Classifications\" (coluna Grid de cada GP)",
+ "championshipId": "temporada-2026",
+ "races": [
+  {
+   "raceId": "race-bel",
+   "round": 1,
+   "circuit": "Spa-Francorchamps",
+   "planilha": "Bélgica",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 2
+    },
+    {
+     "driver": "Matheus Martins",
+     "grid": 11
+    },
+    {
+     "driver": "Renato",
+     "grid": 12
+    },
+    {
+     "driver": "Allex",
+     "grid": 10
+    },
+    {
+     "driver": "Miguel",
+     "grid": 4
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 8
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 5
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 6
+    },
+    {
+     "driver": "Carlos",
+     "grid": 11
+    },
+    {
+     "driver": "Capeleto",
+     "grid": 7
+    },
+    {
+     "driver": "Rodrigo",
+     "grid": 1
+    },
+    {
+     "driver": "Felipe",
+     "grid": 3
+    }
+   ]
+  },
+  {
+   "raceId": "race-chi",
+   "round": 2,
+   "circuit": "Xangai",
+   "planilha": "China",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 1
+    },
+    {
+     "driver": "Matheus Martins",
+     "grid": 9
+    },
+    {
+     "driver": "João Paulo",
+     "grid": 12
+    },
+    {
+     "driver": "Renato",
+     "grid": 16
+    },
+    {
+     "driver": "Miguel",
+     "grid": 6
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 11
+    },
+    {
+     "driver": "Couto",
+     "grid": 10
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 4
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 8
+    },
+    {
+     "driver": "Carlos",
+     "grid": 13
+    },
+    {
+     "driver": "Giovanne",
+     "grid": 7
+    },
+    {
+     "driver": "Batata",
+     "grid": 5
+    },
+    {
+     "driver": "Daniel Sarmet",
+     "grid": 15
+    },
+    {
+     "driver": "Flow",
+     "grid": 2
+    }
+   ]
+  },
+  {
+   "raceId": "race-esp",
+   "round": 3,
+   "circuit": "Barcelona",
+   "planilha": "Espanha",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 10
+    },
+    {
+     "driver": "Matheus Martins",
+     "grid": 9
+    },
+    {
+     "driver": "Renato",
+     "grid": 8
+    },
+    {
+     "driver": "Miguel",
+     "grid": 7
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 6
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 3
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 4
+    },
+    {
+     "driver": "Eduardo",
+     "grid": 5
+    },
+    {
+     "driver": "Capeleto",
+     "grid": 1
+    },
+    {
+     "driver": "Gabriel Silva",
+     "grid": 2
+    }
+   ]
+  },
+  {
+   "raceId": "race-gbr",
+   "round": 4,
+   "circuit": "Silverstone",
+   "planilha": "Grã-Bretanha",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 3
+    },
+    {
+     "driver": "Renato",
+     "grid": 12
+    },
+    {
+     "driver": "Miguel",
+     "grid": 5
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 9
+    },
+    {
+     "driver": "Couto",
+     "grid": 8
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 6
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 7
+    },
+    {
+     "driver": "Carlos",
+     "grid": 11
+    },
+    {
+     "driver": "Eduardo",
+     "grid": 10
+    },
+    {
+     "driver": "Capeleto",
+     "grid": 1
+    },
+    {
+     "driver": "Batata",
+     "grid": 4
+    },
+    {
+     "driver": "Gabriel Silva",
+     "grid": 2
+    }
+   ]
+  },
+  {
+   "raceId": "race-mia",
+   "round": 5,
+   "circuit": "Miami",
+   "planilha": "Miami",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 3
+    },
+    {
+     "driver": "João Paulo",
+     "grid": 7
+    },
+    {
+     "driver": "Renato",
+     "grid": 9
+    },
+    {
+     "driver": "Couto",
+     "grid": 8
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 6
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 5
+    },
+    {
+     "driver": "Felipe",
+     "grid": 2
+    },
+    {
+     "driver": "Gabriel Silva",
+     "grid": 1
+    },
+    {
+     "driver": "Gabs",
+     "grid": 4
+    }
+   ]
+  },
+  {
+   "raceId": "race-jap",
+   "round": 6,
+   "circuit": "Suzuka",
+   "planilha": "Japão",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 3
+    },
+    {
+     "driver": "João Paulo",
+     "grid": 5
+    },
+    {
+     "driver": "Renato",
+     "grid": 9
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 10
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 4
+    },
+    {
+     "driver": "Felipe",
+     "grid": 2
+    },
+    {
+     "driver": "Gabriel Silva",
+     "grid": 8
+    },
+    {
+     "driver": "Flow",
+     "grid": 11
+    },
+    {
+     "driver": "Gabs",
+     "grid": 6
+    },
+    {
+     "driver": "yFelpzk",
+     "grid": 1
+    }
+   ]
+  },
+  {
+   "raceId": "race-ita",
+   "round": 7,
+   "circuit": "Monza",
+   "planilha": "Itália",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 3
+    },
+    {
+     "driver": "Matheus Martins",
+     "grid": 10
+    },
+    {
+     "driver": "Renato",
+     "grid": 11
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 9
+    },
+    {
+     "driver": "Couto",
+     "grid": 6
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 4
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 5
+    },
+    {
+     "driver": "Capeleto",
+     "grid": 2
+    },
+    {
+     "driver": "Gabriel Silva",
+     "grid": 1
+    },
+    {
+     "driver": "Flow",
+     "grid": 12
+    },
+    {
+     "driver": "Gabs",
+     "grid": 7
+    },
+    {
+     "driver": "Gabriel",
+     "grid": 8
+    }
+   ]
+  },
+  {
+   "raceId": "race-sin",
+   "round": 8,
+   "circuit": "Marina Bay",
+   "planilha": "Singapura",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 2
+    },
+    {
+     "driver": "Renato",
+     "grid": 11
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 9
+    },
+    {
+     "driver": "Couto",
+     "grid": 7
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 3
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 4
+    },
+    {
+     "driver": "Capeleto",
+     "grid": 8
+    },
+    {
+     "driver": "Gabriel Silva",
+     "grid": 1
+    },
+    {
+     "driver": "Flow",
+     "grid": 12
+    },
+    {
+     "driver": "Neto",
+     "grid": 5
+    },
+    {
+     "driver": "Gabs",
+     "grid": 6
+    },
+    {
+     "driver": "Fabio",
+     "grid": 10
+    }
+   ]
+  },
+  {
+   "raceId": "race-aus",
+   "round": 9,
+   "circuit": "Red Bull Ring",
+   "planilha": "Austria",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 1
+    },
+    {
+     "driver": "Matheus Martins",
+     "grid": 4
+    },
+    {
+     "driver": "Renato",
+     "grid": 8
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 7
+    },
+    {
+     "driver": "Couto",
+     "grid": 5
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 2
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 3
+    },
+    {
+     "driver": "Gabriel",
+     "grid": 6
+    }
+   ]
+  },
+  {
+   "raceId": "race-bra",
+   "round": 10,
+   "circuit": "Interlagos",
+   "planilha": "Brasil",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 1
+    },
+    {
+     "driver": "Matheus Martins",
+     "grid": 7
+    },
+    {
+     "driver": "Renato",
+     "grid": 8
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 6
+    },
+    {
+     "driver": "Couto",
+     "grid": 5
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 2
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 4
+    }
+   ]
+  },
+  {
+   "raceId": "race-abu",
+   "round": 11,
+   "circuit": "Yas Marina",
+   "planilha": "Abu Dhabi",
+   "grids": [
+    {
+     "driver": "Lucas Amaral",
+     "grid": 2
+    },
+    {
+     "driver": "Matheus Martins",
+     "grid": 6
+    },
+    {
+     "driver": "Renato",
+     "grid": 8
+    },
+    {
+     "driver": "Luiz Henrique",
+     "grid": 7
+    },
+    {
+     "driver": "Couto",
+     "grid": 5
+    },
+    {
+     "driver": "Marcos Paulo",
+     "grid": 4
+    },
+    {
+     "driver": "Guilherme Batalha",
+     "grid": 3
+    },
+    {
+     "driver": "Gabriel Silva",
+     "grid": 1
+    }
+   ]
+  }
+ ]
+}

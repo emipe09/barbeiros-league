@@ -3,11 +3,13 @@
 import { html, $, toast, download, confirmDialog, fmtDateTime } from '../util.js';
 import { store, api, admin, loadSession } from '../data.js';
 import { renderResults } from './results.js';
+import { renderQuali } from './quali.js';
 import { renderRoster } from './roster.js';
 import { renderSeasons } from './seasons.js';
 
 const TABS = [
   ['resultados', 'Lançar resultados'],
+  ['classificacao', 'Classificação (quali)'],
   ['elenco', 'Pilotos e equipes'],
   ['temporadas', 'Temporadas e corridas'],
   ['publicar', 'Publicar e backup'],
@@ -31,6 +33,7 @@ export async function renderAdmin(main, sub, ctx) {
   const body = $('#admin-body');
   const helpers = { ...ctx, reload: async () => { await ctx.refresh({ keepRoute: false }); renderAdmin(main, sub, ctx); } };
   if (current === 'resultados') renderResults(body, rest[0], helpers);
+  else if (current === 'classificacao') renderQuali(body, rest[0], helpers);
   else if (current === 'elenco') renderRoster(body, helpers);
   else if (current === 'temporadas') renderSeasons(body, helpers);
   else renderPublish(body, helpers);

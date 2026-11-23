@@ -2,6 +2,7 @@
 
 import { html, fmtPts } from '../util.js';
 import { champ, findRace, teamColor, team, store } from '../data.js';
+import { fmtLap } from '../telemetry-charts.js';
 
 export function renderRaces(main) {
   const c = champ();
@@ -60,6 +61,19 @@ export function renderRace(main, raceId) {
         ${pole ? html`<p><i class="mk pole"></i> Pole: <a href="#/piloto/${pole.driverId}">${pole.name}</a></p>` : ''}
         ${fl ? html`<p><i class="mk fl"></i> Volta mais rápida: <a href="#/piloto/${fl.driverId}">${fl.name}</a></p>` : ''}
       </div>
+      ${store.league.telemetry?.[r.id] ? html`<p class="race-facts"><a class="btn sm" href="#/telemetria/${r.id}">Ver telemetria desta corrida</a></p>` : ''}
+      ${r.quali.length ? html`<section class="block">
+        <h2>Classificação (grid)</h2>
+        <div class="table-scroll"><table class="tbl">
+          <thead><tr><th class="pos">Pos</th><th>Piloto</th><th>Equipe</th><th class="num">Melhor volta</th><th class="num">Diferença</th></tr></thead>
+          <tbody>${r.quali.map(x => html`<tr>
+            <td class="pos">${x.pos}</td>
+            <td><a href="#/piloto/${x.driverId}">${x.name}</a></td>
+            <td><span class="team-dot" style="--tc:${teamColor(x.teamId)}"></span>${team(x.teamId)?.name || ''}</td>
+            <td class="num">${x.ms ? fmtLap(x.ms) : ''}</td>
+            <td class="num">${x.ms && r.quali[0].ms && x.pos > 1 ? '+' + ((x.ms - r.quali[0].ms) / 1000).toFixed(3) : ''}</td></tr>`)}</tbody>
+        </table></div>
+      </section>` : ''}
       <section class="block">
         <h2>Classificação final</h2>
         <div class="table-scroll"><table class="tbl">
@@ -79,6 +93,6 @@ export function renderRace(main, raceId) {
       ${prev ? html`<a href="#/corrida/${prev.id}" class="btn ghost">← ${prev.flag} ${prev.name}</a>` : html`<span></span>`}
       ${next ? html`<a href="#/corrida/${next.id}" class="btn ghost">${next.flag} ${next.name} →</a>` : ''}
     </nav>
-    ${store.session.canEdit && r.done ? html`<p class="admin-link"><a href="#/admin/resultados/${r.id}">Editar resultado desta corrida</a></p>` : ''}
+    ${store.session.canEdit && r.done ? html`<p class="admin-link"><a href="#/admin/resultados/${r.id}">Editar resultado desta corrida</a> | <a href="#/admin/classificacao/${r.id}">Editar classificação</a></p>` : ''}
   `);
 }

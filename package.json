@@ -11,8 +11,14 @@
     "publicar": "node --disable-warning=ExperimentalWarning scripts/publicar.js",
     "backup": "node --disable-warning=ExperimentalWarning -e \"console.log('Backup salvo em', require('./src/maintenance').backup('manual'))\"",
     "importar-planilha": "node --disable-warning=ExperimentalWarning scripts/import-xlsx.js",
-    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js"
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js",
+    "telemetria": "node --disable-warning=ExperimentalWarning scripts/importar-telemetria.js",
+    "importar-grid": "node --disable-warning=ExperimentalWarning scripts/importar-grid.js"
   },
-  "engines": { "node": ">=22.13.0" },
-  "optionalDependencies": { "xlsx": "^0.18.5" }
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "optionalDependencies": {
+    "xlsx": "^0.18.5"
+  }
 }

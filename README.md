@@ -55,3 +55,13 @@ Barbeiros/
 ## Regras de pontuação
 
 Padrão: 25-18-15-12-10-8-6-4-2-1, sprint 8-7-6-5-4-3-2-1, volta rápida configurável (na League 2 está em 0). Desempate: pontos, vitórias, pódios, poles, voltas rápidas, melhor resultado. Pilotos de equipes cujo nome começa com "Reserv" pontuam para pilotos, mas não para construtores. Transferências valem a partir da etapa escolhida.
+
+## Telemetria e histórico de classificação
+
+- **Importar telemetria** (Pits n' Giggles): `npm run telemetria -- --todas "<pasta csv_output>"` (ou uma sessão: `npm run telemetria -- "<pasta da sessão>" --corrida 6`).
+  Gera `data/telemetria/<corrida>/*.json` (alguns MB; os CSVs brutos ficam de fora do Git) e, nas sessões de classificação, grava o grid no banco.
+  Use `--simular` para ver o que seria feito sem gravar.
+- **Quem é quem:** `data/telemetria/mapa-pilotos.json` liga `"Equipe do jogo|número do carro"` ao nome do piloto na liga. O importador avisa de carros sem mapa e confere as posições com o resultado já lançado no site.
+- **Classificação (quali) à mão:** Admin → "Classificação (quali)". Dá para colar a ordem inteira e preencher temporadas passadas (escolha a temporada no seletor do topo).
+- Depois, "Publicar no site" envia banco e telemetria para o GitHub.
+- A pasta `pits-n-giggles/` (3 GB) está no `.gitignore`.

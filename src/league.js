@@ -4,7 +4,9 @@
    classificações, corridas, pilotos e histórico. É o mesmo JSON servido em
    /api/league (modo servidor) e gravado em dist/data/league.json (site estático). */
 
-const { db, getMeta, isReserveTeamName } = require('./db');
+const fs = require('node:fs');
+const path = require('node:path');
+const { db, getMeta, isReserveTeamName, DATA_DIR } = require('./db');
 const { computeChampionship } = require('./standings');
 const { F1_CALENDAR } = require('./calendar');
 
@@ -17,7 +19,14 @@ const q = {
   entries: (cid) => db.prepare('SELECT * FROM driver_entries WHERE championship_id = ? ORDER BY from_round').all(cid),
   results: (cid) => db.prepare('SELECT * FROM results WHERE championship_id = ?').all(cid),
   race: (id) => db.prepare('SELECT * FROM races WHERE id = ?').get(id),
+  // O banco publicado pode ser anterior à tabela de classificação: não quebra o build.
+  quali: (cid) => { try { return db.prepare('SELECT * FROM qualifying WHERE championship_id = ?').all(cid); } catch (_) { return []; } },
 };
+
+/** Índice das telemetrias importadas (data/telemetria/index.json, gerado por npm run telemetria). */
+function telemetryIndex() {
+  try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'telemetria', 'index.json'), 'utf8')); } catch (_) { return {}; }
+}
 
 const activeChampionshipId = () => getMeta('active_championship_id', '') || null;
 
@@ -32,6 +41,22 @@ function championshipView(champ, teams, drivers) {
   const comp = compute(champ, teams, drivers);
   const done = new Set(comp.doneRaceIds);
   const entries = q.entries(champ.id);
+
+  // Classificação (quali): por corrida e estatísticas por piloto na temporada.
+  const dname = new Map(drivers.map(d => [d.id, d.name]));
+  const qrows = q.quali(champ.id);
+  const qByRace = {};
+  const qualiStats = {};
+  for (const r of qrows) {
+    (qByRace[r.race_id] = qByRace[r.race_id] || []).push(r);
+    const s = qualiStats[r.driver_id] = qualiStats[r.driver_id] || { count: 0, sum: 0, best: null, poles: 0, top3: 0, top5: 0, bestRaceIds: [], perRace: {} };
+    s.count++; s.sum += r.position; s.perRace[r.race_id] = r.position;
+    if (s.best == null || r.position < s.best) s.best = r.position;
+    if (r.position === 1) s.poles++;
+    if (r.position <= 3) s.top3++;
+    if (r.position <= 5) s.top5++;
+  }
+  for (const s of Object.values(qualiStats)) s.bestRaceIds = Object.entries(s.perRace).filter(([, p]) => p === s.best).map(([id]) => id);
   return {
     id: champ.id,
     name: champ.name,
@@ -45,10 +70,14 @@ function championshipView(champ, teams, drivers) {
     races: comp.raceOrder.map(r => ({
       id: r.id, round: r.round, name: r.name, country: r.country, flag: r.flag, circuit: r.circuit,
       isSprint: !!r.is_sprint, done: done.has(r.id), results: comp.raceResults[r.id] || [],
+      quali: (qByRace[r.id] || []).sort((a, b) => a.position - b.position).map(x => ({
+        driverId: x.driver_id, teamId: x.team_id, name: dname.get(x.driver_id) || '?', pos: x.position, ms: x.best_lap_ms, source: x.source,
+      })),
     })),
     entries: entries.map(e => ({ id: e.id, driverId: e.driver_id, teamId: e.team_id, fromRound: e.from_round, isReserve: !!e.is_reserve })),
     standings: comp.standings,
     constructors: comp.ctorStandings,
+    qualiStats,
     doneCount: comp.doneRaceIds.length,
   };
 }
@@ -64,7 +93,7 @@ function buildHistory(champViews, teams, drivers) {
 
   const getDriver = (id, name) => {
     if (!driverAgg.has(id)) {
-      driverAgg.set(id, { driverId: id, name, titles: 0, seasons: 0, points: 0, wins: 0, podiums: 0, poles: 0, fastestLaps: 0, races: 0, dnfs: 0, bestFinish: null, bestChampPos: null, titleSeasons: [] });
+      driverAgg.set(id, { driverId: id, name, titles: 0, seasons: 0, points: 0, wins: 0, podiums: 0, poles: 0, fastestLaps: 0, races: 0, dnfs: 0, bestFinish: null, bestChampPos: null, titleSeasons: [], qCount: 0, qSum: 0, bestQuali: null, bestQualiAt: [], qPoles: 0, qTop3: 0, qTop5: 0 });
     }
     return driverAgg.get(id);
   };
@@ -85,6 +114,12 @@ function buildHistory(champViews, teams, drivers) {
       a.poles += s.poles; a.fastestLaps += s.fastestLaps; a.races += s.races; a.dnfs += s.dnfs;
       if (s.bestFinish != null && (a.bestFinish == null || s.bestFinish < a.bestFinish)) a.bestFinish = s.bestFinish;
       if (isDone && (a.bestChampPos == null || s.position < a.bestChampPos)) a.bestChampPos = s.position;
+      const qs = c.qualiStats && c.qualiStats[s.id];
+      if (qs) {
+        a.qCount += qs.count; a.qSum += qs.sum; a.qPoles += qs.poles; a.qTop3 += qs.top3; a.qTop5 += qs.top5;
+        if (a.bestQuali == null || qs.best < a.bestQuali) { a.bestQuali = qs.best; a.bestQualiAt = []; }
+        if (qs.best === a.bestQuali) a.bestQualiAt.push(...qs.bestRaceIds);
+      }
     }
     for (const t of c.constructors) {
       if (isReserveTeamName(t.name)) continue;
@@ -106,6 +141,7 @@ function buildHistory(champViews, teams, drivers) {
     }
   }
 
+  for (const d of driverAgg.values()) d.avgQuali = d.qCount ? d.qSum / d.qCount : null;
   const drivers_ = [...driverAgg.values()].filter(d => d.races > 0).sort((a, b) => b.titles - a.titles || b.points - a.points || a.name.localeCompare(b.name));
   const teams_ = [...teamAgg.values()].sort((a, b) => b.titles - a.titles || b.points - a.points || a.name.localeCompare(b.name));
 
@@ -150,6 +186,7 @@ function buildLeague() {
     drivers: drivers.map(d => ({ id: d.id, name: d.name, defaultTeamId: d.default_team_id, active: !!d.active })),
     championships: views,
     history: buildHistory(views, teams, drivers),
+    telemetry: telemetryIndex(),
     calendar: F1_CALENDAR,
   };
 }

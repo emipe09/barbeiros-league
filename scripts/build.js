@@ -20,6 +20,9 @@ fs.rmSync(DIST, { recursive: true, force: true });
 fs.cpSync(WEB, DIST, { recursive: true });
 fs.mkdirSync(path.join(DIST, 'data'), { recursive: true });
 
+const TEL = path.join(ROOT, 'data', 'telemetria');
+if (fs.existsSync(TEL)) fs.cpSync(TEL, path.join(DIST, 'data', 'telemetria'), { recursive: true });
+
 const league = buildLeague();
 fs.writeFileSync(path.join(DIST, 'data', 'league.json'), JSON.stringify(league));
 fs.writeFileSync(path.join(DIST, 'config.js'), `window.BARBEIROS = { mode: "static", builtAt: ${JSON.stringify(league.generatedAt)} };\n`);

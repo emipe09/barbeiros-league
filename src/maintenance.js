@@ -32,12 +32,15 @@ function publish(message) {
     throw new Error('Esta pasta ainda não é um repositório Git. Siga o passo 2 do DEPLOY.md.');
   }
   const rel = path.relative(ROOT, DB_PATH);
-  git(['add', rel]);
-  const changed = git(['status', '--porcelain', '--', rel]);
+  const paths = [rel];
+  const tel = path.relative(ROOT, path.join(path.dirname(DB_PATH), 'telemetria'));
+  if (fs.existsSync(path.join(ROOT, tel))) paths.push(tel);
+  git(['add', ...paths]);
+  const changed = git(['status', '--porcelain', '--', ...paths]);
   let committed = false;
   if (changed) {
     const when = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-    git(['commit', '-m', message || `Atualiza resultados (${when})`, '--', rel]);
+    git(['commit', '-m', message || `Atualiza resultados (${when})`, '--', ...paths]);
     committed = true;
   }
   let pushed = false;

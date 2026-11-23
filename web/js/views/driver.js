@@ -1,7 +1,7 @@
 /* Perfil do piloto: carreira em todas as temporadas. */
 
 import { html, fmtPts, cellClass, initials } from '../util.js';
-import { store, driver, teamColor } from '../data.js';
+import { store, driver, teamColor, findRace } from '../data.js';
 
 export function renderDriver(main, id) {
   const d = driver(id);
@@ -26,6 +26,17 @@ export function renderDriver(main, id) {
     ['Pontos', fmtPts(hist?.points || 0)],
     ['Melhor resultado', hist?.bestFinish ? 'P' + hist.bestFinish : '—'],
   ];
+  const q = hist && hist.qCount ? hist : null;
+  const qTiles = q ? [
+    ['Grids registrados', q.qCount],
+    ['Melhor classificação', 'P' + q.bestQuali],
+    ['Grid médio', 'P' + q.avgQuali.toFixed(1).replace('.', ',')],
+    ['Poles (P1 no grid)', q.qPoles],
+    ['Top 3 no grid', q.qTop3],
+    ['Top 5 no grid', q.qTop5],
+  ] : [];
+  const bestAt = q ? q.bestQualiAt.map(findRace).filter(Boolean) : [];
+  const qSeasons = seasons.filter(x => x.c.qualiStats && x.c.qualiStats[id]);
 
   main.innerHTML = String(html`
     <section class="driver-hero" style="--tc:${color}">
@@ -52,6 +63,23 @@ export function renderDriver(main, id) {
       </table></div>
     </section>
 
+    <section class="block">
+      <h2>Histórico de classificação</h2>
+      ${q ? html`
+        <div class="tiles">${qTiles.map(([l, v]) => html`<div class="tile"><span class="tile-v">${v}</span><span class="tile-l">${l}</span></div>`)}</div>
+        <p class="muted small-note">Melhor classificação: <b>P${q.bestQuali}</b> em ${bestAt.slice(0, 4).map((f, i) => html`${i ? ', ' : ''}<a href="#/corrida/${f.race.id}">${f.race.flag} ${f.race.name}</a> (${f.champ.name})`)}${bestAt.length > 4 ? ` e mais ${bestAt.length - 4}` : ''}.</p>
+        <div class="table-scroll"><table class="tbl">
+          <thead><tr><th>Temporada</th><th>Equipe</th><th class="num">Grids</th><th class="num">Grid médio</th><th class="num">Melhor</th><th class="num">P1</th><th class="num">Top 3</th><th class="num">Chegada média</th></tr></thead>
+          <tbody>${qSeasons.map(({ c, s }) => { const qs = c.qualiStats[id]; return html`<tr>
+            <td><a href="#/temporada/${c.id}">${c.name}</a></td>
+            <td><span class="team-dot" style="--tc:${s.teamColor}"></span>${s.teamName || ''}</td>
+            <td class="num">${qs.count}</td><td class="num">${(qs.sum / qs.count).toFixed(1).replace('.', ',')}</td>
+            <td class="num"><b>P${qs.best}</b></td><td class="num">${qs.poles}</td><td class="num">${qs.top3}</td>
+            <td class="num">${s.avgFinish != null ? s.avgFinish.toFixed(1).replace('.', ',') : '—'}</td></tr>`; })}</tbody>
+        </table></div>`
+      : html`<p class="muted">Ainda não há classificação registrada para este piloto. ${store.session.canEdit ? html`<a href="#/admin/classificacao">Cadastrar no admin</a>.` : ''}</p>`}
+    </section>
+
     ${seasons.map(({ c, s }) => html`
       <section class="block">
         <h2>${c.name}: corrida a corrida</h2>
@@ -60,6 +88,12 @@ export function renderDriver(main, id) {
           return html`<li class="cell ${r.done || x ? cellClass(x) : 'c-future'}"><a href="#/corrida/${r.id}" title="${r.name}">
             <span class="flag">${r.flag || '🏁'}</span><b>${x ? (x.pos ?? x.status) : ''}</b><small>${x && x.pts ? '+' + fmtPts(x.pts) : ''}</small></a></li>`;
         })}</ol>
+        ${c.qualiStats?.[id] ? html`<h3 class="sub">Classificação (grid) em cada etapa</h3>
+        <ol class="strip">${c.races.map(r => {
+          const qp = c.qualiStats[id].perRace[r.id];
+          return html`<li class="cell ${qp ? cellClass({ pos: qp }) : 'c-future'}"><a href="#/corrida/${r.id}" title="${r.name}">
+            <span class="flag">${r.flag || '🏁'}</span><b>${qp ? 'P' + qp : ''}</b><small></small></a></li>`;
+        })}</ol>` : ''}
       </section>`)}
   `);
 }

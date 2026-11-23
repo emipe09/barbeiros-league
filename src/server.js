@@ -8,7 +8,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 require('./env').load();
-const { DB_PATH, ROOT } = require('./db');
+const { DB_PATH, ROOT, DATA_DIR } = require('./db');
 const { buildLeague } = require('./league');
 const auth = require('./auth');
 const { ROUTES, HttpError } = require('./routes/admin');
@@ -78,9 +78,11 @@ function serveStatic(req, res, pathname) {
     res.writeHead(200, { 'Content-Type': MIME['.js'], 'Cache-Control': 'no-store' });
     return res.end('window.BARBEIROS = { mode: "server" };');
   }
-  const rel = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
-  const file = path.normalize(path.join(WEB_DIR, rel));
-  if (!file.startsWith(WEB_DIR + path.sep)) { res.writeHead(403); return res.end('Forbidden'); }
+  const isTel = pathname.startsWith('/data/telemetria/');
+  const base = isTel ? path.join(DATA_DIR, 'telemetria') : WEB_DIR;
+  const rel = isTel ? pathname.slice('/data/telemetria/'.length) : (pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, ''));
+  const file = path.normalize(path.join(base, rel));
+  if (!file.startsWith(base + path.sep)) { res.writeHead(403); return res.end('Forbidden'); }
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('Página não encontrada'); }
     res.writeHead(200, { 'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
